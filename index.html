@@ -115,6 +115,49 @@ body { margin: 0; }
 body.embed { padding-block: 16px 24px; }
 body.embed .lede, body.embed footer, body.embed .cta { display: none !important; }
 body.embed h1 { font-size: clamp(30px, 6vw, 44px); }
+
+/* ===== Onglets + générateur de hooks (bonus Your Good Plum) ===== */
+.tabs { display: flex; gap: 6px; justify-content: center; padding: 5px; border: 1px solid rgba(254,250,237,.35); border-radius: 999px; width: fit-content; max-width: 100%; margin: 0 auto; }
+.tabs[hidden] { display: none !important; }
+.tab { font: 700 14px var(--font-body); color: var(--cream); background: transparent; border: none; border-radius: 999px; padding: 10px 18px; cursor: pointer; }
+.tab[aria-selected="true"] { background: var(--cream); color: var(--green); }
+.tab:focus-visible { outline: 3px solid var(--cream-deep); outline-offset: 2px; }
+.panel { display: flex; flex-direction: column; gap: 28px; }
+.panel[hidden] { display: none !important; }
+
+.hook-form { display: flex; flex-direction: column; gap: 18px; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; color: var(--cream); opacity: .9; }
+.field label em { font-style: normal; text-transform: none; letter-spacing: 0; font-weight: 600; opacity: .7; }
+.field input { font: 16px var(--font-body); color: var(--green); background: var(--cream); border: 2px solid transparent; border-radius: 12px; padding: 12px 14px; width: 100%; }
+.field input:focus { outline: none; border-color: var(--green-soft); box-shadow: 0 0 0 3px rgba(254,250,237,.45); }
+.field .hint { font-size: 13px; color: var(--cream); opacity: .7; margin: 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { font: 600 13px var(--font-body); color: var(--cream); background: transparent; border: 1px solid rgba(254,250,237,.45); border-radius: 999px; padding: 7px 12px; cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--cream); color: var(--green); border-color: var(--cream); }
+.chip:disabled { opacity: .35; cursor: not-allowed; }
+.chip:focus-visible { outline: 3px solid var(--cream-deep); outline-offset: 2px; }
+.hook-form .lever { align-self: center; flex: none; width: min(100%, 340px); box-shadow: 0 5px 0 #132c21; }
+.form-error { margin: 0; font-size: 14px; font-weight: 600; color: var(--cream); background: rgba(254,250,237,.12); border-radius: 10px; padding: 8px 12px; }
+.form-error[hidden] { display: none !important; }
+
+.hook-list { display: flex; flex-direction: column; gap: 12px; }
+.hook-card { background: var(--cream); color: var(--green); border-radius: 18px; padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; }
+.hook-card .fam { font-size: 11px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; color: var(--muted); }
+.hook-card .txt { font-family: var(--font-display); font-weight: 400; font-size: clamp(21px, 4.4vw, 26px); line-height: 1.18; margin: 0; text-wrap: pretty; }
+.hook-card .why { margin: 0; font-size: 14px; color: var(--muted); }
+.hook-card .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }
+.hook-card .copy { background: var(--green); color: var(--cream); border: none; border-radius: 999px; padding: 8px 14px; font: 700 13px var(--font-body); cursor: pointer; }
+.hook-card .copy:hover { background: var(--green-deep); }
+.hook-card .copy:focus-visible { outline: 3px solid var(--green-soft); outline-offset: 2px; }
+.hook-more { display: flex; justify-content: center; }
+.hook-more[hidden] { display: none !important; }
+.hook-more .ghost { color: var(--cream); border-color: rgba(254,250,237,.45); }
+.hook-more .ghost:hover { border-color: var(--cream); }
+.rules { border-top: 1px solid rgba(254,250,237,.25); padding-top: 18px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; font-size: 14px; color: var(--cream); opacity: .9; }
+.rules h3 { font-family: var(--font-display); font-weight: 400; font-size: 20px; margin: 0 0 4px; }
+.rules p { margin: 0; }
+@media (max-width: 480px) { .tab { padding: 9px 13px; font-size: 13px; } .hook-card { padding: 16px; } }
 </style>
 </head>
 <body>
@@ -124,6 +167,13 @@ body.embed h1 { font-size: clamp(30px, 6vw, 44px); }
     <h1>La machine à inspi</h1>
     <p class="lede">Trois rouleaux : un format, une intention et un petit défi pour pimenter. Tu as droit à deux relances par tirage, puis on s'engage.</p>
   </header>
+
+  <nav class="tabs" id="tabs" role="tablist" aria-label="Outils" hidden>
+    <button class="tab" id="tab-inspi" role="tab" type="button" aria-selected="true" aria-controls="panel-inspi">Machine à inspi</button>
+    <button class="tab" id="tab-hooks" role="tab" type="button" aria-selected="false" aria-controls="panel-hooks">Générateur de hooks</button>
+  </nav>
+
+  <div class="panel" id="panel-inspi">
 
   <section class="machine" aria-label="Machine à sous">
     <div class="reels" id="reels">
@@ -174,6 +224,48 @@ body.embed h1 { font-size: clamp(30px, 6vw, 44px); }
       <div class="actions">
         <button class="ghost" id="r-other" type="button">Autre idée, même tirage</button>
         <a class="go" id="r-link" href="#" target="_blank" rel="noopener" hidden>Voir toute la banque d'idées ↗</a>
+      </div>
+    </div>
+  </section>
+
+  </div>
+
+  <section class="panel" id="panel-hooks" hidden aria-labelledby="tab-hooks">
+    <section class="machine hook-form" aria-label="Générateur de hooks">
+      <div class="field">
+        <label for="h-sujet">Ton sujet</label>
+        <input id="h-sujet" type="text" autocomplete="off" maxlength="80" placeholder="ex. le travail à pied">
+        <p class="hint">Écris-le avec son article : « la longe », « ton premier cheval », « les sorties en main ».</p>
+      </div>
+      <div class="field">
+        <label for="h-cible">Ta cible <em>(facultatif)</em></label>
+        <input id="h-cible" type="text" autocomplete="off" maxlength="80" placeholder="ex. propriétaire d'un cheval âgé">
+        <p class="hint">Elle complète la phrase « Tu es… ? ». Elle débloque les hooks « Identification ».</p>
+      </div>
+      <div class="field">
+        <label id="fam-label">Types de hooks</label>
+        <div class="chips" id="h-chips" role="group" aria-labelledby="fam-label"></div>
+      </div>
+      <p class="form-error" id="h-error" hidden></p>
+      <button class="lever" id="h-go" type="button">Générer mes hooks</button>
+    </section>
+
+    <p class="empty" id="h-empty">Tes hooks s'afficheront ici. Choisis-en un, adapte-le, publie.</p>
+    <div class="hook-list" id="h-list" aria-live="polite"></div>
+    <div class="hook-more" id="h-more" hidden><button class="ghost" id="h-again" type="button">5 autres hooks</button></div>
+
+    <div class="rules">
+      <div>
+        <h3>3 secondes, pas plus</h3>
+        <p>Ton hook s'écrit à l'écran <b>et</b> se dit dès la première seconde. Si on doit attendre pour comprendre, on a déjà scrollé.</p>
+      </div>
+      <div>
+        <h3>Promesse tenue</h3>
+        <p>Un hook qui promet plus que le contenu ne donne, c'est de la confiance en moins. Relis ton contenu : tient-il ce que le hook annonce ?</p>
+      </div>
+      <div>
+        <h3>Fais-le tien</h3>
+        <p>Ces phrases sont des points de départ. Remplace un mot par le tien, ajoute un détail de ton écurie : c'est là qu'on te reconnaît.</p>
       </div>
     </div>
   </section>
@@ -345,6 +437,192 @@ body.embed h1 { font-size: clamp(30px, 6vw, 44px); }
   setStatic(reelCat, "cat", CATS[2]);
   setStatic(reelTwist, "twist", TWISTS[1]);
   applyTwistVisibility(); updateJokers();
+})();
+</script>
+<script>
+/* ===== Onglets + générateur de hooks (bonus Your Good Plum) =====
+   L'onglet « Hooks » n'apparaît que si l'adresse contient hooks=1
+   (ex. https://…/?embed=1&hooks=1 dans l'espace Plum). Le lien public reste inchangé.
+   Pour ajouter un hook : ajoute une ligne dans la bonne famille ci-dessous.
+   {sujet} = le sujet tel que saisi · {Sujet} = avec majuscule · {cible} = la cible. */
+(function () {
+  const params = new URLSearchParams(location.search);
+  if (params.get("hooks") !== "1") return;
+
+  const FAMILIES = [
+    { id: "curiosite", name: "Curiosité", why: "Tu ouvres une boucle : le cerveau veut connaître la suite.", list: [
+      "Ce que personne ne te dit sur {sujet}.",
+      "J'ai mis des années à comprendre ça sur {sujet}.",
+      "{Sujet} : le détail qui change tout (et que presque tout le monde rate).",
+      "Il y a une chose sur {sujet} que j'aurais aimé savoir plus tôt.",
+      "On m'a posé la question cent fois sur {sujet}. Voilà enfin ma réponse.",
+      "Regarde jusqu'au bout : sur {sujet}, tout se joue à la fin."
+    ]},
+    { id: "erreur", name: "Mise en garde", why: "On a plus peur de se tromper qu'envie de progresser : l'alerte arrête le pouce.", list: [
+      "Arrête de faire ça avec {sujet}.",
+      "L'erreur n°1 que je vois sur {sujet}.",
+      "{Sujet} : la fausse bonne idée que tout le monde applique.",
+      "Avant de te lancer avec {sujet}, regarde ça.",
+      "Si tu fais encore ça avec {sujet}, tu perds du temps.",
+      "Je faisais exactement cette erreur avec {sujet}. Toi aussi ?"
+    ]},
+    { id: "contre", name: "Contre-pied", why: "Tu contredis une idée reçue : on s'arrête pour vérifier si tu as raison.", list: [
+      "Avis impopulaire sur {sujet}…",
+      "Non, {sujet}, ce n'est pas si compliqué.",
+      "On t'a mal expliqué {sujet}.",
+      "Tout le monde a un avis sur {sujet}. Voici le mien, sans filtre.",
+      "Je vais peut-être me faire des ennemis, mais sur {sujet}…",
+      "Et si on arrêtait de compliquer {sujet} ?"
+    ]},
+    { id: "promesse", name: "Promesse", why: "Le bénéfice est clair dès la première seconde : on sait pourquoi rester.", list: [
+      "{Sujet} : je t'explique tout en 30 secondes.",
+      "Enregistre ce post : l'essentiel sur {sujet}.",
+      "La méthode que j'utilise avec mes clients sur {sujet}.",
+      "Si tu galères avec {sujet}, ce contenu est pour toi.",
+      "Le moyen le plus simple de démarrer avec {sujet}.",
+      "Comment j'ai tout simplifié avec {sujet}."
+    ]},
+    { id: "histoire", name: "Histoire", why: "Une histoire qui commence, on l'écoute jusqu'au bout.", list: [
+      "Il y a quelques années, {sujet} me faisait peur.",
+      "Le jour où {sujet} m'a donné une sacrée leçon.",
+      "Une cliente m'a dit un truc sur {sujet} que je n'oublierai jamais.",
+      "Je n'aurais jamais cru dire ça un jour sur {sujet}.",
+      "Hier à l'écurie, il s'est passé un truc avec {sujet}…",
+      "Mon plus gros raté avec {sujet} (et ce qu'il m'a appris)."
+    ]},
+    { id: "question", name: "Question", why: "On répond dans sa tête… puis en commentaire.", list: [
+      "Toi aussi, tu te prends la tête avec {sujet} ?",
+      "Honnêtement : tu fais comment avec {sujet} ?",
+      "Sur {sujet}, tu es plutôt team instinct ou team méthode ?",
+      "Et si le vrai problème, ce n'était pas {sujet} ?",
+      "Question sérieuse : pourquoi on complique autant {sujet} ?",
+      "Qu'est-ce qui a tout débloqué pour toi avec {sujet} ?"
+    ]},
+    { id: "liste", name: "Liste & chiffre", why: "Un chiffre promet un contenu concret, avec une fin : on sait à quoi s'attendre.", list: [
+      "3 choses à savoir sur {sujet}.",
+      "5 signes que tu t'y prends mal avec {sujet}.",
+      "{Sujet} en 3 étapes, pas une de plus.",
+      "Ma checklist sur {sujet}, à garder sous le coude.",
+      "1 minute, 3 conseils sur {sujet}. C'est parti.",
+      "Les 3 questions à te poser avant de te lancer avec {sujet}."
+    ]},
+    { id: "identif", name: "Identification", needsCible: true, why: "La personne se reconnaît : elle sent que ce contenu est fait pour elle.", list: [
+      "Tu es {cible} ? Ce qui suit va te parler.",
+      "Tu es {cible} et tu ne sais pas par où commencer avec {sujet} ?",
+      "Si tu es {cible}, arrête-toi deux secondes.",
+      "Message à toi qui es {cible} : parlons de {sujet}.",
+      "Tu es {cible} ? Je parie que tu as déjà vécu ça.",
+      "Tu es {cible} et tu te poses mille questions sur {sujet} ? C'est normal."
+    ]}
+  ];
+
+  const $ = (id) => document.getElementById(id);
+  const rand = (n) => Math.floor(Math.random() * n);
+  const shuffle = (a) => { for (let i = a.length - 1; i > 0; i--) { const j = rand(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+  const clean = (s) => s.replace(/\s+/g, " ").trim().replace(/[.!?…:;,]+$/, "");
+  const cap = (s) => s.charAt(0).toLocaleUpperCase("fr-FR") + s.slice(1);
+
+  // Onglets
+  const tabs = $("tabs"), pInspi = $("panel-inspi"), pHooks = $("panel-hooks");
+  const footer = document.querySelector("footer");
+  const h1 = document.querySelector("header h1"), eyebrow = document.querySelector("header .eyebrow"), lede = document.querySelector("header .lede");
+  const orig = { h1: h1.textContent, eyebrow: eyebrow.textContent, lede: lede.textContent, title: document.title };
+  tabs.hidden = false;
+  function selectTab(which) {
+    const hooks = which === "hooks";
+    $("tab-inspi").setAttribute("aria-selected", String(!hooks));
+    $("tab-hooks").setAttribute("aria-selected", String(hooks));
+    pInspi.hidden = hooks; pHooks.hidden = !hooks;
+    if (footer) footer.hidden = hooks;
+    h1.textContent = hooks ? "Le générateur de hooks" : orig.h1;
+    eyebrow.textContent = hooks ? "Bonus Your Good Plum" : orig.eyebrow;
+    lede.textContent = hooks ? "Ton sujet, ta cible, et tu repars avec cinq premières phrases qui donnent envie de rester." : orig.lede;
+    document.title = hooks ? "Le générateur de hooks · Your Good Com" : orig.title;
+  }
+  $("tab-inspi").addEventListener("click", () => selectTab("inspi"));
+  $("tab-hooks").addEventListener("click", () => selectTab("hooks"));
+  tabs.addEventListener("keydown", (e) => {
+    if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+    const next = $("tab-hooks").getAttribute("aria-selected") === "true" ? "inspi" : "hooks";
+    selectTab(next); $("tab-" + next).focus();
+  });
+  selectTab(params.get("tab") === "hooks" ? "hooks" : "inspi");
+
+  // Filtres de familles
+  const selected = new Set(FAMILIES.map(f => f.id));
+  const chipsBox = $("h-chips"), cibleIn = $("h-cible"), sujetIn = $("h-sujet");
+  FAMILIES.forEach(f => {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "chip"; b.textContent = f.name; b.dataset.id = f.id;
+    b.setAttribute("aria-pressed", "true");
+    b.addEventListener("click", () => {
+      if (selected.has(f.id)) { if (activeFamilies().length <= 1) return; selected.delete(f.id); } else selected.add(f.id);
+      b.setAttribute("aria-pressed", String(selected.has(f.id)));
+    });
+    chipsBox.appendChild(b);
+  });
+  function refreshChips() {
+    const hasCible = clean(cibleIn.value) !== "";
+    chipsBox.querySelectorAll(".chip").forEach(b => {
+      const f = FAMILIES.find(x => x.id === b.dataset.id);
+      if (f.needsCible) { b.disabled = !hasCible; b.title = hasCible ? "" : "Renseigne ta cible pour débloquer ces hooks"; }
+    });
+  }
+  cibleIn.addEventListener("input", refreshChips); refreshChips();
+  const activeFamilies = () => FAMILIES.filter(f => selected.has(f.id) && (!f.needsCible || clean(cibleIn.value) !== ""));
+
+  // Génération
+  let pool = [], key = "";
+  function fill(tpl, sujet, cible) {
+    return tpl.replace(/\{Sujet\}/g, cap(sujet)).replace(/\{sujet\}/g, sujet).replace(/\{cible\}/g, cible);
+  }
+  function buildPool(sujet, cible) {
+    // Une file mélangée par famille, puis on pioche à tour de rôle pour varier les types.
+    const queues = activeFamilies().map(f => shuffle(f.list.map(t => ({ fam: f, text: fill(t, sujet, cible) }))));
+    shuffle(queues);
+    const out = [];
+    while (queues.some(q => q.length)) queues.forEach(q => { if (q.length) out.push(q.shift()); });
+    return out;
+  }
+  function render(batch) {
+    const list = $("h-list");
+    list.innerHTML = "";
+    batch.forEach(h => {
+      const card = document.createElement("article"); card.className = "hook-card";
+      const fam = document.createElement("span"); fam.className = "fam"; fam.textContent = h.fam.name;
+      const txt = document.createElement("p"); txt.className = "txt"; txt.textContent = h.text;
+      const row = document.createElement("div"); row.className = "row";
+      const why = document.createElement("p"); why.className = "why"; why.textContent = h.fam.why;
+      const btn = document.createElement("button"); btn.type = "button"; btn.className = "copy"; btn.textContent = "Copier";
+      btn.addEventListener("click", () => copy(h.text, btn));
+      row.append(why, btn); card.append(fam, txt, row); list.appendChild(card);
+    });
+    $("h-empty").hidden = true;
+    $("h-more").hidden = false;
+    $("h-again").textContent = pool.length ? "5 autres hooks" : "Tout vu ! On remélange";
+  }
+  function copy(text, btn) {
+    const done = () => { btn.textContent = "Copié ✓"; setTimeout(() => { btn.textContent = "Copier"; }, 1600); };
+    if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(text).then(done, () => fallback()); }
+    else fallback();
+    function fallback() {
+      const ta = document.createElement("textarea"); ta.value = text; ta.setAttribute("readonly", "");
+      ta.style.position = "fixed"; ta.style.opacity = "0"; document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); done(); } catch (e) { btn.textContent = "Sélectionne et copie"; }
+      ta.remove();
+    }
+  }
+  function generate(fresh) {
+    const sujet = clean(sujetIn.value), cible = clean(cibleIn.value), err = $("h-error");
+    if (!sujet) { err.textContent = "Écris d'abord ton sujet, par exemple « le travail à pied »."; err.hidden = false; sujetIn.focus(); return; }
+    err.hidden = true;
+    const k = sujet + "|" + cible + "|" + activeFamilies().map(f => f.id).join(",");
+    if (fresh || k !== key || !pool.length) { pool = buildPool(sujet, cible); key = k; }
+    render(pool.splice(0, 5));
+  }
+  $("h-go").addEventListener("click", () => generate(true));
+  $("h-again").addEventListener("click", () => generate(false));
+  [sujetIn, cibleIn].forEach(i => i.addEventListener("keydown", (e) => { if (e.key === "Enter") generate(true); }));
 })();
 </script>
 </body>
